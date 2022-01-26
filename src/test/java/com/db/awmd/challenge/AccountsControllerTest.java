@@ -98,27 +98,15 @@ public class AccountsControllerTest {
     String uniqueAccountId = "Id-" + System.currentTimeMillis();
     Account account = new Account(uniqueAccountId, new BigDecimal("123.45"));
     this.accountsService.createAccount(account);
-    verifyAccountBalance(uniqueAccountId, new BigDecimal("123.45"));
-  }
-
-  private void verifyAccountBalance(final String accountId, final BigDecimal balance) throws Exception {
-    this.mockMvc.perform(get("/v1/accounts/" + accountId))
+    this.mockMvc.perform(get("/v1/accounts/" + uniqueAccountId))
             .andExpect(status().isOk())
             .andExpect(
-                    content().string("{\"accountId\":\"" + accountId + "\",\"balance\":"+balance+"}"));
+                    content().string("{\"accountId\":\"" + uniqueAccountId + "\",\"balance\":123.45}"));
   }
 
   @Test
-  public void makeTransferAccountFromNotFound() throws Exception {
+  public void nonExistingAcTransfer() throws Exception {
     createAccountWithContent("{\"accountId\":\"Id-2\",\"balance\":1000}").andExpect(status().isCreated());
-
-    makeTransferWithContent("{\"accountFromId\":\"Id-1\",\"accountToId\":\"Id-2\",\"amount\":1000}")
-            .andExpect(status().isNotFound());
-  }
-
-  @Test
-  public void makeTransferAccountToNotFound() throws Exception {
-    createAccountWithContent("{\"accountId\":\"Id-1\",\"balance\":1000.20}").andExpect(status().isCreated());
 
     makeTransferWithContent("{\"accountFromId\":\"Id-1\",\"accountToId\":\"Id-2\",\"amount\":1000}")
             .andExpect(status().isNotFound());
@@ -132,73 +120,12 @@ public class AccountsControllerTest {
   }
 
   @Test
-  public void makeTransferSameAccount() throws Exception {
-    createAccountWithContent("{\"accountId\":\"Id-1\",\"balance\":1000}").andExpect(status().isCreated());
-    makeTransferWithContent("{\"accountFromId\":\"Id-1\",\"accountToId\":\"Id-1\",\"amount\":1000}")
-            .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  public void makeTransferOverdraft() throws Exception {
-    createAccountWithContent("{\"accountId\":\"Id-1\",\"balance\":20.50}").andExpect(status().isCreated());
-    createAccountWithContent("{\"accountId\":\"Id-2\",\"balance\":1000}").andExpect(status().isCreated());
-
-    makeTransferWithContent("{\"accountFromId\":\"Id-1\",\"accountToId\":\"Id-2\",\"amount\":21}")
-            .andExpect(status().isUnprocessableEntity());
-  }
-
-  @Test
-  public void makeTransferNegativeAmount() throws Exception {
+  public void negativeMoneyTransfer() throws Exception {
     createAccountWithContent("{\"accountId\":\"Id-1\",\"balance\":100.50}").andExpect(status().isCreated());
     createAccountWithContent("{\"accountId\":\"Id-2\",\"balance\":1000.50}").andExpect(status().isCreated());
 
     makeTransferWithContent("{\"accountFromId\":\"Id-1\",\"accountToId\":\"Id-2\",\"amount\":-50}")
             .andExpect(status().isBadRequest());
   }
-
-  @Test
-  public void makeTransferEmptyBody() throws Exception {
-    makeTransferWithContent("{}")
-            .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  public void makeTransferNoBody() throws Exception {
-    this.mockMvc.perform(put("/v1/accounts/moneyTransfer").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  public void makeTransferZeroBalanceAfterTransfer() throws Exception {
-    createAccountWithContent("{\"accountId\":\"Id-1\",\"balance\":2000.20}").andExpect(status().isCreated());
-    createAccountWithContent("{\"accountId\":\"Id-2\",\"balance\":100}").andExpect(status().isCreated());
-
-    makeTransferWithContent("{\"accountFromId\":\"Id-1\",\"accountToId\":\"Id-2\",\"amount\":2000.20}")
-            .andExpect(status().isOk());
-
-    verifyAccountBalance("Id-1", new BigDecimal("0.00"));
-    verifyAccountBalance("Id-2", new BigDecimal("2100.20"));
-  }
-
-  @Test
-  public void makeTransferBetweenAccountsPositiveBalanceAfterTransfer() throws Exception {
-    createAccountWithContent("{\"accountId\":\"Id-1\",\"balance\":5100.21}").andExpect(status().isCreated());
-    createAccountWithContent("{\"accountId\":\"Id-2\",\"balance\":6000}").andExpect(status().isCreated());
-
-    makeTransferWithContent("{\"accountFromId\":\"Id-1\",\"accountToId\":\"Id-2\",\"amount\":5000}")
-            .andExpect(status().isOk());
-
-    verifyAccountBalance("Id-1", new BigDecimal("100.21"));
-    verifyAccountBalance("Id-2", new BigDecimal("11000"));
-  }
-
-
-
-
-
-
-
-
-
 
 }

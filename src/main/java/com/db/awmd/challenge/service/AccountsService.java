@@ -50,15 +50,14 @@ public class AccountsService {
 
         transferValidator.validate(accountFrom, accountTo, transfer);
 
-        //ideally atomic operation in production
         boolean successful = accountsRepository.updateAccountsBatch(Arrays.asList(
                 new AccountUpdate(accountFrom.getAccountId(), amount.negate()),
                 new AccountUpdate(accountTo.getAccountId(), amount)
                 ));
 
         if (successful){
-            notificationService.notifyAboutTransfer(accountFrom, "The transfer to the account with ID " + accountTo.getAccountId() + " is now complete for the amount of " + transfer.getAmount() + ".");
-            notificationService.notifyAboutTransfer(accountTo, "The account with ID + " + accountFrom.getAccountId() + " has transferred " + transfer.getAmount() + " into your account.");
+            notificationService.notifyAboutTransfer(accountFrom, "Transferring: " + transfer.getAmount() +" amount to the account ID " + accountTo.getAccountId() + " is now complete .");
+            notificationService.notifyAboutTransfer(accountTo, "The account ID + " + accountFrom.getAccountId() + " transferred " + transfer.getAmount() + " in your account.");
         }
     }
 

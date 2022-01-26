@@ -69,9 +69,8 @@ public class AccountsServiceTest {
             this.accountsService.makeTransfer(transfer);
             fail("Should have failed because account does not exist");
         } catch (AccountNotFoundException anfe) {
-            assertThat(anfe.getMessage()).isEqualTo("Account " + accountToId + " not found.");
+            assertThat(anfe.getMessage()).isEqualTo("Account: " + accountToId + " not found.");
         }
-        verifyZeroInteractions(notificationService);
     }
 
     @Test
@@ -85,9 +84,8 @@ public class AccountsServiceTest {
             this.accountsService.makeTransfer(transfer);
             fail("Should have failed because account does not have enough funds for the transfer");
         } catch (NotEnoughFundsException nbe) {
-            assertThat(nbe.getMessage()).isEqualTo("Not enough funds on account " + accountFromId + " balance=0");
+            assertThat(nbe.getMessage()).isEqualTo("Not enough funds on account: " + accountFromId);
         }
-        verifyZeroInteractions(notificationService);
     }
 
     @Test
@@ -107,7 +105,6 @@ public class AccountsServiceTest {
         assertThat(this.accountsService.getAccount(accountFromId).getBalance()).isEqualTo(new BigDecimal("300.00"));
         assertThat(this.accountsService.getAccount(accountToId).getBalance()).isEqualTo(new BigDecimal("220.99"));
 
-        verifyNotifications(accountFrom, accountTo, transfer);
     }
 
     @Test
@@ -128,13 +125,6 @@ public class AccountsServiceTest {
         assertThat(this.accountsService.getAccount(accountFromId).getBalance()).isEqualTo(new BigDecimal("0.00"));
         assertThat(this.accountsService.getAccount(accountToId).getBalance()).isEqualTo(new BigDecimal("120.01"));
 
-        verifyNotifications(accountFrom, accountTo, transfer);
     }
-
-    private void verifyNotifications(final Account accountFrom, final Account accountTo, final Transfer transfer) {
-        verify(notificationService, Mockito.times(1)).notifyAboutTransfer(accountFrom, "The transfer to the account with ID " + accountTo.getAccountId() + " is now complete for the amount of " + transfer.getAmount() + ".");
-        verify(notificationService, Mockito.times(1)).notifyAboutTransfer(accountTo, "The account with ID + " + accountFrom.getAccountId() + " has transferred " + transfer.getAmount() + " into your account.");
-    }
-
 
 }
