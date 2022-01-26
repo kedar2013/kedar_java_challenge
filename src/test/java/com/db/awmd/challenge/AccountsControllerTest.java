@@ -126,7 +126,7 @@ public class AccountsControllerTest {
 
   private ResultActions makeTransferWithContent(String content) throws Exception {
     return this.mockMvc.perform(
-            put("/v1/accounts/transfer")
+            put("/v1/accounts/moneyTransfer")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(content));
   }
@@ -164,7 +164,7 @@ public class AccountsControllerTest {
 
   @Test
   public void makeTransferNoBody() throws Exception {
-    this.mockMvc.perform(put("/v1/accounts/transfer").contentType(MediaType.APPLICATION_JSON))
+    this.mockMvc.perform(put("/v1/accounts/moneyTransfer").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
   }
 

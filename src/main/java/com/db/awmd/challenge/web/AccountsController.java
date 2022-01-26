@@ -5,7 +5,6 @@ import com.db.awmd.challenge.domain.Transfer;
 import com.db.awmd.challenge.exception.AccountNotFoundException;
 import com.db.awmd.challenge.exception.DuplicateAccountIdException;
 import com.db.awmd.challenge.exception.NotEnoughFundsException;
-import com.db.awmd.challenge.exception.TransferBetweenSameAccountException;
 import com.db.awmd.challenge.service.AccountsService;
 
 import javax.validation.Valid;
@@ -48,7 +47,7 @@ public class AccountsController {
         return this.accountsService.getAccount(accountId);
     }
 
-    @PutMapping(path = "/transfer", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/moneyTransfer", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> makeTransfer(@RequestBody @Valid Transfer transfer) {
         log.info("Making transfer {}", transfer);
 
@@ -58,8 +57,6 @@ public class AccountsController {
             return new ResponseEntity<>(ane.getMessage(), HttpStatus.NOT_FOUND);
         } catch (NotEnoughFundsException nbe) {
             return new ResponseEntity<>(nbe.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (TransferBetweenSameAccountException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(HttpStatus.OK);

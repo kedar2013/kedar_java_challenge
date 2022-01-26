@@ -5,7 +5,6 @@ import com.db.awmd.challenge.domain.AccountUpdate;
 import com.db.awmd.challenge.domain.Transfer;
 import com.db.awmd.challenge.exception.AccountNotFoundException;
 import com.db.awmd.challenge.exception.NotEnoughFundsException;
-import com.db.awmd.challenge.exception.TransferBetweenSameAccountException;
 import com.db.awmd.challenge.repository.AccountsRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +40,9 @@ public class AccountsService {
     }
 
     /**
-     * Makes a transfer between two accounts for the balance specified by the {@link Transfer} object
-     * @param transfer
-     * @throws AccountNotFoundException When an account does not exist
-     * @throws NotEnoughFundsException When there are not enough funds to complete the transfer
-     * @throws TransferBetweenSameAccountException Transfer to self account is not permitted
+     * Functionality for a transfer of money between accounts
      */
-    public void makeTransfer(Transfer transfer) throws AccountNotFoundException, NotEnoughFundsException, TransferBetweenSameAccountException {
+    public void makeTransfer(Transfer transfer) throws AccountNotFoundException, NotEnoughFundsException {
 
         final Account accountFrom = accountsRepository.getAccount(transfer.getAccountFromId());
         final Account accountTo = accountsRepository.getAccount(transfer.getAccountToId());
