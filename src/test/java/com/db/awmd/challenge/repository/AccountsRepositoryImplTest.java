@@ -2,6 +2,7 @@ package com.db.awmd.challenge.repository;
 
 import com.db.awmd.challenge.domain.Account;
 import com.db.awmd.challenge.domain.AccountUpdate;
+import com.db.awmd.challenge.repository.impl.AccountsRepositoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,13 +12,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AccountsRepositoryInMemoryTest {
+public class AccountsRepositoryImplTest {
 
     private AccountsRepository accountsRepository;
 
     @Before
     public void setUp(){
-        accountsRepository = new AccountsRepositoryInMemory();
+        accountsRepository = new AccountsRepositoryImpl();
     }
 
     @Test

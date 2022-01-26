@@ -1,4 +1,4 @@
-package com.db.awmd.challenge.repository;
+package com.db.awmd.challenge.repository.impl;
 
 import com.db.awmd.challenge.domain.Account;
 import com.db.awmd.challenge.domain.AccountUpdate;
@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.db.awmd.challenge.repository.AccountsRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AccountsRepositoryInMemory implements AccountsRepository {
+public class AccountsRepositoryImpl implements AccountsRepository {
 
     private final Map<String, Account> accounts = new ConcurrentHashMap<>();
 
