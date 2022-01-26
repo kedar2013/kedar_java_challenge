@@ -1,4 +1,4 @@
-package com.db.awmd.challenge.controller;
+package com.db.awmd.challenge.web;
 
 import com.db.awmd.challenge.domain.Account;
 import com.db.awmd.challenge.domain.Transfer;
