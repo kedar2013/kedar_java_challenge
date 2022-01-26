@@ -5,8 +5,8 @@ endpoint: http://localhost:18080/v1/accounts/moneyTransfer
 
 Payload can be : 
 {
-  "accountFromId":"Id-1",
-  "accountToId":"Id-2",
+  "accountFromId":"1",
+  "accountToId":"2",
   "amount": "1.55"
 }
 
