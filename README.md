@@ -1,5 +1,5 @@
 # kedar_java_challenge
-Once the project build is ready and running, to test the API's we can run them through Postman request
+Once the project build is ready and running, to test the API's we can test them through Postman request
 
 endpoint: http://localhost:18080/v1/accounts/moneyTransfer
 
